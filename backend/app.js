@@ -1,19 +1,23 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const { errors } = require("celebrate");
+const cors = require("cors");
+const path = require("path");
 const usersRoutes = require("./routes/users");
 const cardsRoutes = require("./routes/cards");
 const errorHandler = require("./middleware/errorHandler");
 const { requestLogger, errorLogger } = require("./middleware/logger");
 
-require("dotenv").config();
+require("dotenv").config({ path: path.join(__dirname, ".env") });
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 
 // Express app
 const app = express();
 
 // Middleware
+app.use(cors());
+
 app.use(express.json());
 app.use(errors());
 
