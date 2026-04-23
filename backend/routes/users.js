@@ -15,12 +15,6 @@ const {
 } = require("../controllers/users");
 const { signupUser, signinUser } = require("../controllers/users");
 
-router.get("/crash-test", () => {
-  setTimeout(() => {
-    throw new Error("O servidor travará agora");
-  }, 0);
-});
-
 // POST /signin
 router.post("/signin", signinUser);
 
