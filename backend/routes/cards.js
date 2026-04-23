@@ -21,15 +21,15 @@ router.use(auth);
 router.get("/", getCards);
 
 // DELETE /cards/:cardId
-router.delete("/:cardId", validateUserId, validateAuth, deleteCard);
+router.delete("/:cardId", deleteCard);
 
 // POST /cards
-router.post("/", validateCreateCard, validateUserId, validateAuth, createCard);
+router.post("/", createCard);
 
 // PUT /cards/:cardId/likes
-router.put("/:cardId/likes", validateUserId, validateAuth, likeCard);
+router.put("/:cardId/likes", likeCard);
 
 // DELETE /cards/:cardId/likes
-router.delete("/:cardId/likes", validateUserId, validateAuth, dislikeCard);
+router.delete("/:cardId/likes", dislikeCard);
 
 module.exports = router;

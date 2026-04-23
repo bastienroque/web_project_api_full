@@ -5,7 +5,7 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 
 import { api } from "../utils/api.js";
 import * as auth from "../utils/auth.js";
-import * as token from "../utils/token.js";
+import { setToken, removeToken } from "../utils/token.js";
 
 import CurrentUserContext from "../contexts/CurrentUserContext.js";
 
@@ -19,13 +19,16 @@ import { Register } from "./Register.jsx";
 import { Signin } from "./Signin.jsx";
 
 function App() {
-  const [currentUser, setCurrentUser] = useState({ name: "User" });
+  const [currentUser, setCurrentUser] = useState({
+    name: "User",
+    description: "About",
+  });
   const [popup, setPopup] = useState(null);
 
   const [cards, setCards] = useState([]);
 
-  const [userData, setUserData] = useState({ email: "test@example.com" });
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [userData, setUserData] = useState({ email: "" });
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const navigate = useNavigate();
 
@@ -33,6 +36,7 @@ function App() {
   const [tooltipMessage, setTooltipMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
 
+  // adaptar em async/await
   useEffect(() => {
     api
       .getCards()
@@ -143,15 +147,13 @@ function App() {
     }
   };
 
-  const handleRegistration = ({ email, password, confirmPassword }) => {
-    if (password === confirmPassword) {
-      auth
-        .register(email, password)
-        .then(() => {
-          navigate("/signin");
-        })
-        .catch((error) => console.error("Erro ao registrar usuário:", error));
-    }
+  const handleRegistration = ({ email, password }) => {
+    if (!email || !password) return;
+
+    auth
+      .register(email, password)
+      .then(() => navigate("/"))
+      .catch((error) => console.error("Erro ao registrar usuário:", error));
   };
 
   const showTooltip = (message, success = false) => {
@@ -172,9 +174,9 @@ function App() {
     auth
       .authorize(email, password)
       .then((data) => {
-        if (data.jwt) {
-          token.setToken(data.jwt);
-          setUserData(data.user);
+        console.log(data);
+        if (data.token) {
+          setToken(data.token);
           showTooltip("Signin realizado com sucesso!", true);
           setIsLoggedIn(true);
           navigate("/");
@@ -186,7 +188,7 @@ function App() {
   };
 
   const handleSignOut = () => {
-    token.removeToken();
+    removeToken();
     setIsLoggedIn(false);
     setUserData({ email: "" });
     navigate("/signin");

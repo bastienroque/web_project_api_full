@@ -10,7 +10,7 @@ const signinUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await User.login(email, password);
+    const user = await User.signin(email, password);
 
     const token = createToken(user._id);
 
@@ -41,6 +41,13 @@ module.exports = { signupUser, signinUser };
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send(users))
+    .catch(next);
+};
+
+// GET /users/me - returns current user
+module.exports.getCurrentUser = (req, res, next) => {
+  User.findById(req.user._id)
+    .then((user) => res.send(user))
     .catch(next);
 };
 

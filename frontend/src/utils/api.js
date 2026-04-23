@@ -4,6 +4,15 @@ export class Api {
     this._headers = options.headers || {};
   }
 
+  _getHeaders() {
+    const token = localStorage.getItem("jwt");
+
+    return {
+      ...this._headers,
+      Authorization: token ? `Bearer ${token}` : undefined,
+    };
+  }
+
   _checkResponse(res) {
     if (res.ok) return res.json();
     return res.text().then((text) => {
@@ -13,17 +22,10 @@ export class Api {
     });
   }
 
-  getUserInfo() {
-    return fetch(`${this._baseUrl}/users/me`, {
-      method: "GET",
-      headers: this._headers,
-    }).then(this._checkResponse);
-  }
-
   getInitialCards() {
     return fetch(`${this._baseUrl}/cards`, {
       method: "GET",
-      headers: this._headers,
+      headers: this._getHeaders(),
     }).then(this._checkResponse);
   }
 
@@ -34,7 +36,7 @@ export class Api {
   updateUser(data) {
     return fetch(`${this._baseUrl}/users/me`, {
       method: "PATCH",
-      headers: Object.assign({}, this._headers, {
+      headers: Object.assign({}, this._getHeaders(), {
         "Content-Type": "application/json",
       }),
       body: JSON.stringify(data),
@@ -44,7 +46,7 @@ export class Api {
   updateAvatar(data) {
     return fetch(`${this._baseUrl}/users/me/avatar`, {
       method: "PATCH",
-      headers: Object.assign({}, this._headers, {
+      headers: Object.assign({}, this._getHeaders(), {
         "Content-Type": "application/json",
       }),
       body: JSON.stringify(data),
@@ -52,9 +54,10 @@ export class Api {
   }
 
   addCard(data) {
+    console.log("Headers:", this._headers);
     return fetch(`${this._baseUrl}/cards`, {
       method: "POST",
-      headers: Object.assign({}, this._headers, {
+      headers: Object.assign({}, this._getHeaders(), {
         "Content-Type": "application/json",
       }),
       body: JSON.stringify(data),
@@ -64,33 +67,61 @@ export class Api {
   deleteCard(cardId) {
     return fetch(`${this._baseUrl}/cards/${cardId}`, {
       method: "DELETE",
-      headers: this._headers,
+      headers: this._getHeaders(),
     }).then(this._checkResponse);
   }
 
   likeCard(cardId) {
     return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
       method: "PUT",
-      headers: this._headers,
+      headers: this._getHeaders(),
     }).then(this._checkResponse);
   }
 
   unlikeCard(cardId) {
     return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
       method: "DELETE",
-      headers: this._headers,
+      headers: this._getHeaders(),
     }).then(this._checkResponse);
   }
 
   getAppInfo() {
-    return Promise.all([this.getUser(), this.getInitialCards()]);
+    return Promise.all([this.getUserInfo(), this.getInitialCards()]);
+  }
+
+  // Signup user
+  signup(email, password) {
+    return fetch(`${this._baseUrl}/signup`, {
+      method: "POST",
+      headers: Object.assign({}, this._getHeaders(), {
+        "Content-Type": "application/json",
+      }),
+      body: JSON.stringify({ email, password }),
+    }).then(this._checkResponse);
+  }
+
+  // Signin user
+  signin(email, password) {
+    return fetch(`${this._baseUrl}/signin`, {
+      method: "POST",
+      headers: Object.assign({}, this._getHeaders(), {
+        "Content-Type": "application/json",
+      }),
+      body: JSON.stringify({ email, password }),
+    }).then(this._checkResponse);
+  }
+
+  getUserInfo() {
+    return fetch(`${this._baseUrl}/me`, {
+      method: "GET",
+      headers: Object.assign({}, this._getHeaders(), {
+        "Content-Type": "application/json",
+      }),
+    }).then(this._checkResponse);
   }
 }
 
 export const api = new Api({
-  baseUrl: "https://around-api.pt-br.tripleten-services.com/v1",
-  headers: {
-    authorization: "1da0d044-34aa-4152-ac1c-b80b56571712",
-    "Content-Type": "application/json",
-  },
+  baseUrl: "http://localhost:3001",
+  // http://api.webprojectapifull.mooo.com
 });

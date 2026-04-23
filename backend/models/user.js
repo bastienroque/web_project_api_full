@@ -32,8 +32,8 @@ const userSchema = new Schema({
   password: {
     type: String,
     require: true,
-    minLength: 8,
-    select: false,
+    // minLength: 8,
+    // select: false,
   },
 });
 
@@ -49,7 +49,6 @@ userSchema.statics.signin = async function (email, password) {
   if (!user) {
     throw Error("Incorrect email");
   }
-
   const match = await bcrypt.compare(password, user.password);
 
   if (!match) {

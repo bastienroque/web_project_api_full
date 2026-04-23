@@ -3,14 +3,14 @@ const User = require("../models/user");
 
 const auth = async (req, res, next) => {
   // verify authentication
-  const { authorization } = req.headers;
+  const Authorization = req.headers.authorization;
 
-  if (!authorization) {
+  console.log("Authorization header:", Authorization);
+  if (!Authorization) {
     return res.status(403).json({ error: "Authorization token required" });
   }
 
-  const token = authorization.split(" ")[1];
-
+  const token = Authorization.split(" ")[1];
   try {
     const { _id } = jwt.verify(token, process.env.JWT_SECRET);
     req.user = await User.findOne({ _id }).select("_id").select("+password");

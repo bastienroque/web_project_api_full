@@ -1,7 +1,7 @@
-export const BASE_URL = "https://se-register-api.en.tripleten-services.com/v1";
+export const BASE_URL = "http://localhost:3001";
 
 export const register = (email, password) => {
-  return fetch(`${BASE_URL}/signup`, {
+  return fetch(`${BASE_URL}/users/signup`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -13,7 +13,7 @@ export const register = (email, password) => {
 };
 
 export const authorize = (email, password) => {
-  return fetch(`${BASE_URL}/signin`, {
+  return fetch(`${BASE_URL}/users/signin`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

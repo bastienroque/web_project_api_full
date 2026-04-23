@@ -38,3 +38,6 @@ npm-debug.log*
 .env
 backend/.env
 frontend/.env
+
+# VsCode
+.vscode/

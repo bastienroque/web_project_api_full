@@ -4,7 +4,6 @@ const validator = require("validator");
 // Validate user creation
 const validateCreateUser = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30).required(),
     email: Joi.string().email().required(),
     password: Joi.string().min(8).required(),
   }),
@@ -36,7 +35,7 @@ const validateUserId = celebrate({
 const validateAuth = celebrate({
   headers: Joi.object()
     .keys({
-      authorization: Joi.string().required(),
+      Authorization: Joi.string().required(),
     })
     .unknown(true), // Permite outros headers
 });

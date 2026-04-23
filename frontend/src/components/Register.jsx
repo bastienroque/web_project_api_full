@@ -52,18 +52,14 @@ export const Register = ({ handleRegistration }) => {
             onChange={handleChange}
           />
           <div className="register__button-container">
-            <button
-              type="submit"
-              className="register__link"
-              onSubmit={handleRegistration}
-            >
+            <button type="submit" className="register__link">
               Inscrever-se
             </button>
           </div>
         </form>
         <div className="register__signin">
           <Link to="/signin" className="register__signin-link">
-            Já é um membro? Faça o signin
+            Já é um membro? Faça o signin aqui
           </Link>
         </div>
       </div>
