@@ -29,6 +29,13 @@ app.use((req, res, next) => {
 // Request logger
 app.use(requestLogger);
 
+// Crash test route
+app.get("/crash-test", () => {
+  setTimeout(() => {
+    throw new Error("O servidor travará agora");
+  }, 0);
+});
+
 // Routes
 app.use("/users", usersRoutes);
 app.use("/cards", cardsRoutes);
