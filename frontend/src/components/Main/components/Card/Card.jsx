@@ -1,6 +1,7 @@
 export default function Card(props) {
-  const { name, link, isLiked } = props.card;
-  const { card, onCardDelete, onCardLike, onCardClick } = props;
+  const { card, onCardDelete, onCardLike, onCardClick, currentUser } = props;
+
+  const isLiked = card.likes.includes(currentUser?._id);
 
   function handleRemoveClick() {
     onCardDelete(card);
@@ -20,8 +21,8 @@ export default function Card(props) {
     <li className="card">
       <img
         className="card__image"
-        src={link}
-        alt={name}
+        src={card.link}
+        alt={card.name}
         onClick={handleImageClick}
       />
       <button
@@ -31,7 +32,7 @@ export default function Card(props) {
         onClick={handleRemoveClick}
       ></button>
       <div className="card__description">
-        <h2 className="card__title">{name}</h2>
+        <h2 className="card__title">{card.name}</h2>
         <button
           aria-label="Botão de curtir"
           type="button"

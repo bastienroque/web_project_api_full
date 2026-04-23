@@ -69,27 +69,20 @@ module.exports.createUser = (req, res) => {
 };
 
 // PATCH /users/me - updates one user
-module.exports.updateProfile = (req, res) => {
+module.exports.updateProfile = (req, res, next) => {
   const { name, about } = req.body;
-
-  if (req.params.userId !== req.user._id) {
-    return res
-      .status(403)
-      .json({ message: "Você só pode editar seu próprio perfil" });
-  }
 
   User.findByIdAndUpdate(
     req.user._id,
     { name, about },
     { new: true, runValidators: true },
   )
-    .orFail()
     .then((user) => res.send(user))
     .catch(next);
 };
 
 // PATCH /users/me/avatar - updates user's avatar
-module.exports.updateAvatar = (req, res) => {
+module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
 
   User.findByIdAndUpdate(

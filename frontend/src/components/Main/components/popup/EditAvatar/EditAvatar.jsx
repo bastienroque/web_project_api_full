@@ -1,4 +1,11 @@
-export default function EditAvatar({ onClose }) {
+export default function EditAvatar({ onClose, onSubmit }) {
+  function handleSubmit(event) {
+    event.preventDefault();
+
+    const avatar = event.target.avatar.value;
+
+    onSubmit({ avatar });
+  }
   return (
     <div className="popup" id="avatar-popup">
       <div className="popup__content">
@@ -9,7 +16,12 @@ export default function EditAvatar({ onClose }) {
           onClick={onClose}
         ></button>
         <h3 className="popup__title">Atualizar avatar</h3>
-        <form className="popup__form" id="avatar-form" name="avatarForm">
+        <form
+          className="popup__form"
+          id="avatar-form"
+          name="avatarForm"
+          onSubmit={handleSubmit}
+        >
           <input
             className="popup__input popup__input_type_url"
             name="avatar"

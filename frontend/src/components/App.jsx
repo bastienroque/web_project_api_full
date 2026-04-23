@@ -21,7 +21,7 @@ import { Signin } from "./Signin.jsx";
 function App() {
   const [currentUser, setCurrentUser] = useState({
     name: "User",
-    description: "About",
+    about: "About",
   });
   const [popup, setPopup] = useState(null);
 
@@ -64,16 +64,14 @@ function App() {
     })();
   };
 
-  const handleUpdateAvatar = (data) => {
-    (async () => {
-      await api
-        .updateAvatar(data)
-        .then((newData) => {
-          setCurrentUser(newData);
-          handleClosePopup();
-        })
-        .catch((error) => console.error("Erro ao atualizar avatar:", error));
-    })();
+  const handleUpdateAvatar = async ({ avatar }) => {
+    try {
+      const newData = await api.updateAvatar({ avatar });
+      setCurrentUser(newData);
+      handleClosePopup();
+    } catch (error) {
+      console.error("Erro ao atualizar avatar:", error);
+    }
   };
 
   const handleUpdateNewCard = (data) => {
@@ -98,7 +96,7 @@ function App() {
   }
 
   async function handleCardLike(card) {
-    const isLiked = card.isLiked;
+    const isLiked = card.likes.includes(currentUser?._id);
 
     try {
       let newCard;
@@ -108,7 +106,6 @@ function App() {
       } else {
         newCard = await api.likeCard(card._id);
       }
-
       setCards((state) =>
         state.map((currentCard) =>
           currentCard._id === card._id ? newCard : currentCard,
@@ -174,7 +171,6 @@ function App() {
     auth
       .authorize(email, password)
       .then((data) => {
-        console.log(data);
         if (data.token) {
           setToken(data.token);
           showTooltip("Signin realizado com sucesso!", true);
@@ -218,6 +214,7 @@ function App() {
                   onCardDelete={handleCardDelete}
                   onCardAdd={handleUpdateNewCard}
                   handleSignOut={handleSignOut}
+                  onUpdateAvatar={handleUpdateAvatar}
                 />
                 <Footer />
               </div>

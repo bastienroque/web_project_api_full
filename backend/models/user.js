@@ -4,6 +4,8 @@ const validator = require("validator");
 
 const Schema = mongoose.Schema;
 
+const urlRegex = /^https?:\/\/(www\.)?[a-zA-Z0-9._~:/?%#[\]@!$&'()*+,;=-]+#?$/;
+
 const userSchema = new Schema({
   name: {
     type: String,

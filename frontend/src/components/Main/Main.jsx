@@ -16,6 +16,7 @@ export default function Main({
   onOpenPopup,
   onClosePopup,
   popup,
+  onUpdateAvatar,
 }) {
   const { currentUser } = useContext(CurrentUserContext);
   const [selectedCard, setSelectedCard] = useState(null);
@@ -35,7 +36,7 @@ export default function Main({
 
   const editAvatarPopup = {
     title: "Alterar a foto do perfil",
-    children: <EditAvatar onClose={onClosePopup} />,
+    children: <EditAvatar onClose={onClosePopup} onSubmit={onUpdateAvatar} />,
   };
 
   const newCardPopup = {
@@ -75,18 +76,18 @@ export default function Main({
           <img
             alt="Avatar do usuário"
             className="profile__avatar"
-            src={currentUser.avatar}
+            src={currentUser?.avatar}
           />
         </div>
         <div className="profile__info">
-          <h1 className="profile__title">{currentUser.name}</h1>
+          <h1 className="profile__title">{currentUser?.name}</h1>
           <button
             aria-label="Edit profile"
             className="profile__edit-button"
             type="button"
             onClick={() => onOpenPopup(editProfilePopup)}
           />
-          <p className="profile__description">{currentUser.about}</p>
+          <p className="profile__description">{currentUser?.about}</p>
         </div>
         <button
           aria-label="Add card"
@@ -102,6 +103,7 @@ export default function Main({
             <Card
               key={card._id}
               card={card}
+              currentUser={currentUser}
               onCardLike={onCardLike}
               onCardDelete={handleCardDelete}
               onCardClick={handleCardClick}

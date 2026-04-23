@@ -1,25 +1,32 @@
-import { useState, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import CurrentUserContext from "../../../../../contexts/CurrentUserContext.js";
 
 export default function EditProfile() {
   const userContext = useContext(CurrentUserContext);
   const { currentUser, handleUpdateUser } = userContext;
 
-  const [name, setName] = useState(currentUser.name);
-  const [description, setDescription] = useState(currentUser.about);
+  const [name, setName] = useState("");
+  const [about, setAbout] = useState("");
+
+  useEffect(() => {
+    if (currentUser) {
+      setName(currentUser.name || "");
+      setAbout(currentUser.about || "");
+    }
+  }, [currentUser]);
 
   const handleNameChange = (event) => {
     setName(event.target.value);
   };
 
   const handleDescriptionChange = (event) => {
-    setDescription(event.target.value);
+    setAbout(event.target.value);
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    handleUpdateUser({ name, about: description });
+    handleUpdateUser({ name, about });
   };
 
   return (
@@ -40,7 +47,7 @@ export default function EditProfile() {
           placeholder="Name"
           required
           type="text"
-          value={name}
+          value={currentUser?.name}
           onChange={handleNameChange}
         />
         <span className="popup__error" id="owner-name-error"></span>
@@ -55,7 +62,7 @@ export default function EditProfile() {
           placeholder="About me"
           required
           type="text"
-          value={description}
+          value={currentUser?.about}
           onChange={handleDescriptionChange}
         />
         <span className="popup__error" id="owner-description-error"></span>

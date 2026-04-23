@@ -54,7 +54,6 @@ export class Api {
   }
 
   addCard(data) {
-    console.log("Headers:", this._headers);
     return fetch(`${this._baseUrl}/cards`, {
       method: "POST",
       headers: Object.assign({}, this._getHeaders(), {
@@ -112,7 +111,7 @@ export class Api {
   }
 
   getUserInfo() {
-    return fetch(`${this._baseUrl}/me`, {
+    return fetch(`${this._baseUrl}/users/me`, {
       method: "GET",
       headers: Object.assign({}, this._getHeaders(), {
         "Content-Type": "application/json",

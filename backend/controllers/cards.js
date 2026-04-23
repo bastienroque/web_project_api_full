@@ -10,23 +10,39 @@ module.exports.getCards = (req, res, next) => {
 
 // POST /cards - creates new card
 module.exports.createCard = (req, res, next) => {
-  const { name, link, owner } = req.body;
+  const { name, link } = req.body;
 
-  Card.create({ name, link, owner })
+  Card.create({
+    name,
+    link,
+    owner: req.user._id,
+  })
     .then((card) => res.status(201).send(card))
     .catch(next);
 };
 
 // DELETE /cards/:cardId - deletes specific card
 module.exports.deleteCard = (req, res, next) => {
-  if (Card.owner.toString() !== req.user._id) {
-    return res
-      .status(403)
-      .json({ message: "Você não pode deletar este cartão" });
-  }
-  Card.findByIdAndDelete(req.params.cardId)
-    .orFail()
-    .then((card) => res.send(card))
+  Card.findById(req.params.cardId)
+    .then((card) => {
+      if (!card) {
+        return res.status(404).json({ message: "Card not found" });
+      }
+
+      if (!req.user || !card.owner) {
+        return res.status(500).json({ message: "Missing user or owner" });
+      }
+
+      if (card.owner.toString() !== req.user._id.toString()) {
+        return res.status(403).json({
+          message: "Você não pode deletar este cartão",
+        });
+      }
+
+      return Card.findByIdAndDelete(req.params.cardId).then(() =>
+        res.send({ message: "Card deleted" }),
+      );
+    })
     .catch(next);
 };
 
