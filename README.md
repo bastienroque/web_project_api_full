@@ -19,4 +19,4 @@ Utilização de React e React-Router, projeto iniciado com método CRA, JavaScri
 
 # Link GitHub Pages
 
-https://bastienroque.github.io/web_project_api_full/
+https://webprojectapifull.mooo.com/
